@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}Chat Log{% endblock %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h1>Chat Log</h1>
+
+<!-- Table to display chat log -->
+<div class="card mt-4">
+  <div class="card-body">
+      <table class="table">
+          <thead>
+              <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">User</th>
+                  <th scope="col">Message</th>
+                  <th scope="col">Response</th>
+                  <th scope="col">Timestamp</th>
+                  <th scope="col">Actions</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for chat in chats %}
+                  <tr>
+                      <th scope="row">{{ forloop.counter }}</th>
+                      <td>{{ chat.user }}</td>
+                      <td>{{ chat.message }}</td>
+                      <td>{{ chat.response }}</td>
+                      <td>{{ chat.created_at }}</td>
+                      <td>
+                          <form method="post" action="{% url 'insert_to_train' chat.id %}" style="display: inline;">
+                              {% csrf_token %}
+                              <button type="submit" class="btn btn-success btn-sm">Insert to Train Dataset</button>
+                          </form>
+                          <button class="btn btn-primary btn-sm modify-log data-chat-class" data-toggle="modal" data-target="#modifyModal"
+                              data-chat-id="{{ chat.id }}" data-message="{{ chat.message }}" data-response="{{ chat.response }}">
+                              Modify Log
+                          </button>
+                      </td>
+                  </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+  </div>
+</div>
+
+<!-- Modify Log Modal -->
+<div class="modal fade" id="modifyModal" tabindex="-1" role="dialog" aria-labelledby="modifyModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modifyModalLabel">Modify Log</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <form method="post" action="{% url 'modify_log' %}" id="modifyForm">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="message">Message:</label>
+            <textarea class="form-control" id="message" name="message" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="response">Response:</label>
+            <textarea class="form-control" id="response" name="response" rows="3"></textarea>
+          </div>
+          <input type="hidden" name="chat_id" id="chatIdInput" value="">
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}
+{% block scripts %}
+
+<script>
+  $(document).ready(function(){
+    $('.modify-log').on('click', function () {
+    var currentRow = $(this).closest('tr');
+    var chatId = $(this).attr('data-chat-id');
+    console.log(chatId);
+    var message = currentRow.find('td:eq(1)').text();
+    var response = currentRow.find('td:eq(2)').text();
+  
+    $('#chatIdInput').val($(this).attr('data-chat-id') || '');  // Ensure chatId is not empty
+    $('#message').val(message);
+    $('#response').val(response);
+    $('#modifyForm').attr('action', '{% url "modify_log" %}');
+  });
+  })
+  
+  </script>
+  {% endblock %}
