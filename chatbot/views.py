@@ -14,6 +14,7 @@ from langchain.document_loaders import DirectoryLoader
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import Chroma
+# from langchain.document_loaders import PandasDataFrameLoader
 from langchain_community.document_loaders import DataFrameLoader
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
@@ -25,26 +26,36 @@ def initialize_chain():
     # Get the data from the database
     queryset = Train_dataset.objects.all()
     qa_data = queryset.values('question', 'answers')
+    # print("qa_data:", qa_data)
+    
     # Convert the data into a DataFrame
     df = pd.DataFrame.from_records(qa_data)
-    if os.path.exists("mydata/SocialLabsTrainingFormat.xlsx"):
-        os.remove("mydata/SocialLabsTrainingFormat.xlsx")
+    # print("df:", df)
+
+    # if os.path.exists("mydata/SocialLabsTrainingFormat.xlsx"):
+    #     os.remove("mydata/SocialLabsTrainingFormat.xlsx")
+    
     # Save the DataFrame as an Excel file
-    directory_path = "mydata/"
-    excel_file_path = os.path.join(directory_path, "SocialLabsTrainingFormat.xlsx")
+    # directory_path = "mydata/"
+    # excel_file_path = os.path.join(directory_path, "SocialLabsTrainingFormat.xlsx")
 
     # Create the directory if it doesn't exist
-    os.makedirs(directory_path, exist_ok=True)
+    # os.makedirs(directory_path, exist_ok=True)
 
     # Save the Excel file
-    df.to_excel(excel_file_path, index=False)
+    # df.to_excel(excel_file_path, index=False)
 
-    # Load documents from the directory
-    loader = DirectoryLoader(directory_path)
+    # Load documents from the Pandas DataFrame using PandasDataFrameLoader
+    loader = DataFrameLoader(df, page_content_column="answers")
     documents = loader.load()
 
+    # Access the content and metadata of each document
+    for document in documents:
+        content = document.page_content
+        metadata = document.metadata
+
     # Initialize the text splitter and embeddings
-    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     texts = text_splitter.split_documents(documents)
     embeddings = OpenAIEmbeddings()
 
