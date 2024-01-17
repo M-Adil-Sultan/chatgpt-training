@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-7s1yyq+eim981+_5b137dibg^eyd3^5p68%2k7u=xvg!)!za9$
 DEBUG = False
 
 ALLOWED_HOSTS = ['chatgpt-training.nb-live.com', 'localhost', '127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['chatgpt-training.nb-live.com']
+CSRF_TRUSTED_ORIGINS = ['http://chatgpt-training.nb-live.com/']
 
 
 # Application definition
