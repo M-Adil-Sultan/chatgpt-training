@@ -19,7 +19,7 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 
 # Set the OpenAI API key as an environment variable
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = "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"
 
 def initialize_chain():
     # Get the data from the database
