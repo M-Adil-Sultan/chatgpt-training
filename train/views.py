@@ -3,6 +3,7 @@ import os
 from django.shortcuts import render, redirect
 from .models import Train_dataset
 from .forms import TrainForm
+from django.http import HttpResponse
 from django.core.files.storage import FileSystemStorage
 
 def train(request):
@@ -14,19 +15,37 @@ def train(request):
         form = TrainForm(request.POST, request.FILES)
         
         if form.is_valid():
+            print("Form is valid")  # Print for debugging
             # Save the form data to the Train_dataset model
             form.save()
 
             # Handle uploaded Excel file
             excel_file = request.FILES.get('excel_file')
+            print("Excel File:", excel_file)  # Print the uploaded Excel file for debugging
             if excel_file:
+                print("Excel File is valid")  # Print for debugging
                 handle_uploaded_excel(excel_file)
+            else:
+                print("Excel File is not valid")  # Print for debugging
 
             return redirect('train')  # Redirect to the same page after submission
     else:
         form = TrainForm()
 
     return render(request, 'train.html', {'question_answers': question_answers, 'form': form})
+
+
+def upload_excel(request):
+    if request.method == 'POST':
+        excel_file = request.FILES.get('excel_file')
+        if excel_file:
+            handle_uploaded_excel(excel_file)
+            return redirect('train')
+        else:
+            return HttpResponse("No file provided.")
+
+    return HttpResponse("Invalid request.")
+
 
 def handle_uploaded_excel(excel_file):
     # Save the uploaded Excel file to a temporary location

@@ -39,40 +39,43 @@
     </div>
 
     <!-- Form to insert new questions and answers -->
-    <div class="card mt-4">
-      <div class="card-body">
-        <h5 class="card-title mb-3">Insert New Question and Answer</h5>
-        <form method="post" action="{% url 'train' %}">
-          {% csrf_token %}
-          
-          {{ form.as_p }}  <!-- Render the form fields -->
+<div class="card mt-4">
+  <div class="card-body">
+    <h5 class="card-title mb-3">Insert New Question and Answer</h5>
+    <form method="post" action="{% url 'train' %}">
+      {% csrf_token %}
 
-          <button type="submit" class="btn btn-primary">Submit Text Fields</button>
-        </form>
-      </div>
-    </div>
+      {{ form.as_p }}  <!-- Render the form fields -->
 
-    <!-- Form to upload Excel file -->
-    <div class="card mt-4">
-      <div class="card-body">
-        <h5 class="card-title mb-3">Upload Excel File</h5>
-        <form method="post" action="{% url 'train' %}" enctype="multipart/form-data">
-          {% csrf_token %}
-
-          <!-- Add a file input field for uploading Excel file -->
-          <div class="form-group">
-            <label for="id_excel_file">Choose Excel File</label>
-            <input type="file" name="excel_file" class="form-control-file" id="id_excel_file">
-          </div>
-
-          <button type="submit" class="btn btn-success">Upload Excel File</button>
-        </form>
-        <br>
-        <!-- make button for initiate training -->
-        <form method="post" action="{% url 'chain_initializer' %}" enctype="multipart/form-data">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-danger">Initiate Training</button>
-      </div>
-    </div>
+      <button type="submit" class="btn btn-primary">Submit Text Fields</button>
+    </form>
   </div>
+</div>
+
+<!-- Form to upload Excel file -->
+<div class="card mt-4">
+  <div class="card-body">
+    <h5 class="card-title mb-3">Upload Excel File</h5>
+    <form method="post" action="{% url 'upload_excel' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <!-- Add a file input field for uploading Excel file -->
+      <div class="form-group">
+        <label for="id_excel_file">Choose Excel File</label>
+        <input type="file" name="excel_file" class="form-control-file" id="id_excel_file">
+      </div>
+
+      <button type="submit" class="btn btn-success">Upload Excel File</button>
+    </form>
+    <br>
+    <!-- make button for initiate training -->
+    <form method="post" action="{% url 'chain_initializer' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Initiate Training</button>
+  </div>
+</div>
+        </div>
+
+
+
 {% endblock %}
