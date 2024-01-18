@@ -32,34 +32,35 @@ def initialize_chain():
     df = pd.DataFrame.from_records(qa_data)
     # print("df:", df)
 
-    # if os.path.exists("mydata/SocialLabsTrainingFormat.xlsx"):
-    #     os.remove("mydata/SocialLabsTrainingFormat.xlsx")
+    if os.path.exists("mydata/SocialLabsTrainingFormat.xlsx"):
+        os.remove("mydata/SocialLabsTrainingFormat.xlsx")
     
     # Save the DataFrame as an Excel file
-    # directory_path = "mydata/"
-    # excel_file_path = os.path.join(directory_path, "SocialLabsTrainingFormat.xlsx")
+    directory_path = "mydata/"
+    excel_file_path = os.path.join(directory_path, "SocialLabsTrainingFormat.xlsx")
 
     # Create the directory if it doesn't exist
-    # os.makedirs(directory_path, exist_ok=True)
+    os.makedirs(directory_path, exist_ok=True)
 
     # Save the Excel file
-    # df.to_excel(excel_file_path, index=False)
+    df.to_excel(excel_file_path, index=False)
 
     # Load documents from the Pandas DataFrame using PandasDataFrameLoader
-    loader = DataFrameLoader(df, page_content_column="answers")
+    # loader = DataFrameLoader(df, page_content_column="answers")
+    loader = DirectoryLoader(directory_path)
     documents = loader.load()
 
     # Access the content and metadata of each document
-    for document in documents:
-        content = document.page_content
-        metadata = document.metadata
+    # for document in documents:
+    #     content = document.page_content
+    #     metadata = document.metadata
 
     # Initialize the text splitter and embeddings
-    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+    text_splitter = CharacterTextSplitter(chunk_size=1200, chunk_overlap=200)
     texts = text_splitter.split_documents(documents)
     embeddings = OpenAIEmbeddings()
 
-    # Create the Chroma vector store
+    # # Create the Chroma vector store
     docsearch = Chroma.from_documents(texts, embeddings)
 
     # Create the RetrievalQA object
