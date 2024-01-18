@@ -33,7 +33,7 @@ cd django-chatgpt-chatbot
 2. Install the required Python packages using pip:
 
 ```
-pip install openai, langchain, tiktoken, chromadb untructured
+pip install openai, langchain, tiktoken, chromadb untructured, django-bootstrap4
 ```
 
 3. Set up your OpenAI API key:

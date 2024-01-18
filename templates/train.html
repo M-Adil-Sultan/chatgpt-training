@@ -1,42 +1,48 @@
 {% extends 'base.html' %}
 
 {% block title %}Train Page{% endblock %}
-
+{% load bootstrap4 %}
 {% block content %}
   <div class="container mt-4">
     <h1 class="mb-4">Train Dataset</h1>
     
-    <!-- Table to display questions and answers -->
-    <div class="card mt-4">
-      <div class="card-body">
-        <h5 class="card-title mb-3">Question and Answers</h5>
-        <table class="table table-striped">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Question</th>
-              <th scope="col">Answer</th>
-              <th scope="col">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for qa in question_answers %}
-              <tr>
-                <th scope="row">{{ forloop.counter }}</th>
-                <td>{{ qa.question }}</td>
-                <td>{{ qa.answers }}</td>
-                <td>
-                  <form method="post" action="{% url 'delete' qa.id %}" style="display: inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                  </form>
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+<!-- Table to display questions and answers -->
+<div class="card mt-4">
+  <div class="card-body">
+    <h5 class="card-title mb-3">Question and Answers</h5>
+    <table class="table table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Question</th>
+          <th scope="col">Answer</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for qa in question_answers %}
+          <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ qa.question }}</td>
+            <td>{{ qa.answers }}</td>
+            <td>
+              <form method="post" action="{% url 'delete' qa.id %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination justify-content-center">
+      {% bootstrap_pagination question_answers %}
     </div>
+  </div>
+</div>
+
 
     <!-- Form to insert new questions and answers -->
 <div class="card mt-4">

@@ -1,14 +1,28 @@
-import pandas as pd
 import os
-from django.shortcuts import render, redirect
-from .models import Train_dataset
+import pandas as pd
 from .forms import TrainForm
+from .models import Train_dataset
 from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from django.core.files.storage import FileSystemStorage
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 def train(request):
     # Fetch all data from the Train_dataset model
-    question_answers = Train_dataset.objects.all()
+    all_question_answers = Train_dataset.objects.all()
+
+    # Paginate the queryset
+    paginator = Paginator(all_question_answers, 5)
+    page = request.GET.get('page')
+    try:
+        question_answers = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        question_answers = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g., 9999), deliver last page of results.
+        question_answers = paginator.page(paginator.num_pages)
 
     # Handle form submission
     if request.method == 'POST':
