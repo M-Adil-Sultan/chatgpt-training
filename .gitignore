@@ -25,7 +25,6 @@
 ######################
 *.log
 *.sql
-*.sqlite
 
 # OS generated files #
 ######################
@@ -39,7 +38,6 @@ Thumbs.db
 *.xlsx
 *.xls
 *.csv
-db.sqlite3
 mydata/SocialLabsTrainingFormat.xlsx
 chatbot/__pycache__/
 django_chatbot/__pycache__/
