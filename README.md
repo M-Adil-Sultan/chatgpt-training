@@ -17,7 +17,7 @@ Before you start using the Django ChatGPT Chatbot, make sure you have the follow
 
 - Python (>= 3.6)
 - Django (>= 3.0)
-- OpenAI GPT-3.5 API key (sign up at [OpenAI website](https://openai.com) to get the API key)
+- OpenAI GPT-3.5 API key (sign up at [OpenAI website](https://platform.openai.com/api-keys) to get the API key)
 
 ## Installation
 
@@ -26,8 +26,8 @@ Follow these steps to set up the Django ChatGPT Chatbot:
 1. Clone the repository:
 
 ```
-git clone https://github.com/yourusername/django-chatgpt-chatbot.git
-cd django-chatgpt-chatbot
+git clone https://github.com/nativebrains/chatgpt-training
+cd chatgpt-training
 ```
 
 2. Install the required Python packages using pip:
@@ -38,11 +38,10 @@ pip install openai, langchain, tiktoken, chromadb untructured, django-bootstrap4
 
 3. Set up your OpenAI API key:
 
-   Open `views.py` in [chatbot folder](chatbot\views.py) and add openai_api_key:
+   Open `views.py` in [chatbot folder](chatbot/views.py) and add openai_api_key:
 
    ```python
    openai_api_key = 'YOUR_API_KEY' # Replace YOUR_API_KEY with your openai apikey 
-   openai.api_key = openai_api_key 
    ```
 
 ## Usage
