@@ -101,6 +101,10 @@ def chatbot(request):
 
     if request.method == 'POST':
         message = request.POST.get('message')
+        db_response = Train_dataset.objects.filter(question=message).first()
+        if db_response is not None and db_response.answers is not None:
+            return JsonResponse({'message': message, 'response': db_response.answers})
+
         response = ask_openai(message)
 
         chat = Chat(user=request.user, message=message, response=response, created_at=timezone.now())
