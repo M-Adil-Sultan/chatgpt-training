@@ -68,7 +68,7 @@ def initialize_chain():
 
     # Create the ConversationalRetrievalChain
     chain = ConversationalRetrievalChain.from_llm(
-        llm=ChatOpenAI(model="gpt-3.5-turbo"),
+        llm=ChatOpenAI(model="gpt-4"),
         retriever=docsearch.as_retriever(search_kwargs={"k": 1}),
     )
 
@@ -101,7 +101,7 @@ def chatbot(request):
 
     if request.method == 'POST':
         message = request.POST.get('message')
-        db_response = Train_dataset.objects.filter(question=message).first()
+        db_response = Train_dataset.objects.filter(question__iexact=message).first()
         if db_response is not None and db_response.answers is not None:
             return JsonResponse({'message': message, 'response': db_response.answers})
 
