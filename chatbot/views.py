@@ -18,6 +18,8 @@ from langchain.vectorstores import Chroma
 from langchain_community.document_loaders import DataFrameLoader
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
+import time
+import uuid
 
 # Set the OpenAI API key as an environment variable
 os.environ["OPENAI_API_KEY"] = "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"
@@ -110,8 +112,10 @@ def chatbot(request):
         chat = Chat(user=request.user, message=message, response=response, created_at=timezone.now())
         chat.save()
         return JsonResponse({'message': message, 'response': response})
-
-    return render(request, 'chatbot.html', {'chats': chats})
+    dict = {}
+    for chat in chats:
+        dict[uuid.uuid4().hex[:6].upper()] = chat
+    return render(request, 'chatbot.html', {'chats': dict.items()})
 
 # Remaining views (login, register, logout, chatlog) remain unchanged.
 
