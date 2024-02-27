@@ -7,6 +7,11 @@
     <h1 class="mb-4">Train Dataset</h1>
     
 <!-- Table to display questions and answers -->
+{% if request.session.success == 1 %}
+<div class="alert alert-success" role="alert">
+  Data saved successfully !
+</div>
+{% endif %}
 <div class="card mt-4">
   <div class="card-body">
     <h5 class="card-title mb-3">Question and Answers</h5>
