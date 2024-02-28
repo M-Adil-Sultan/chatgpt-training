@@ -9,9 +9,10 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 def train(request):
-    request.session['success'] = 0
+    
     # Fetch all data from the Train_dataset model
     all_question_answers = Train_dataset.objects.all()
+    request.session['success'] = request.session['success'] + 3
 
     # Paginate the queryset
     paginator = Paginator(all_question_answers, 20)
@@ -42,12 +43,12 @@ def train(request):
                 handle_uploaded_excel(excel_file)
             else:
                 print("Excel File is not valid")  # Print for debugging
-            request.session['success'] = 1
+            request.session['success'] = 2
             return redirect('train')  # Redirect to the same page after submission
     else:
         form = TrainForm()
-
     return render(request, 'train.html', {'question_answers': question_answers, 'form': form})
+    
 
 
 def upload_excel(request):

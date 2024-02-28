@@ -7,10 +7,9 @@
     <h1 class="mb-4">Train Dataset</h1>
     
 <!-- Table to display questions and answers -->
-{% if request.session.success == 1 %}
-<div class="alert alert-success" role="alert">
-  Data saved successfully !
-</div>
+{% if request.session.success == 5 %}
+<div id="alert"></div>
+
 {% endif %}
 <div class="card mt-4">
   <div class="card-body">
@@ -89,4 +88,19 @@
 
 
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(()=>{ 
+      if (document.querySelector('#alert')){
+          Swal.fire({
+            title: "Success",
+            text: "Question saved successfully",
+            icon: "success"
+          });
+          //document.getElementById('alert').remove()
+        }
+    })
+</script>
 {% endblock %}
