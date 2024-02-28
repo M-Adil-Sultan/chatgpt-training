@@ -201,7 +201,6 @@ navigator.clipboard.writeText(messageDiv.innerHTML).then(function() {
       .then(response => response.json())
       .then(data => {
         const response = data.response;
-        print(data)
         const id  = Date.now().toString()
         const messageItem = document.createElement('li');
         messageItem.classList.add('message', 'received');
