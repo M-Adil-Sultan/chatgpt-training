@@ -12,7 +12,7 @@ def train(request):
     
     # Fetch all data from the Train_dataset model
     all_question_answers = Train_dataset.objects.all()
-    request.session['success'] = request.session['success'] + 3
+    request.session['success'] = request.session.get('success',0) + 3
 
     # Paginate the queryset
     paginator = Paginator(all_question_answers, 20)
