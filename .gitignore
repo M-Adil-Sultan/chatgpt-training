@@ -42,3 +42,4 @@ mydata/SocialLabsTrainingFormat.xlsx
 chatbot/__pycache__/
 django_chatbot/__pycache__/
 train/__pycache__/
+Dockerfile
