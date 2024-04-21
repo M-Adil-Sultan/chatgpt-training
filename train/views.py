@@ -15,7 +15,7 @@ def train(request):
     request.session['success'] = request.session.get('success',0) + 3
 
     # Paginate the queryset
-    paginator = Paginator(all_question_answers, 20)
+    paginator = Paginator(all_question_answers, 8)
     page = request.GET.get('page')
     try:
         question_answers = paginator.page(page)

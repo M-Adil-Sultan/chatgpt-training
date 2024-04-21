@@ -1,182 +1,129 @@
-{% extends 'base.html' %}
-
-{% block styles %}
-<style>
-  body,
-  html {
-    height: 100%;
-  }
-
-  .messages-box {
-    flex: 1;
-    overflow-y: auto;
-  }
-
-  .messages-list {
-    padding-left: 0;
-  }
-
-  .message {
-    margin-bottom: 15px;
-    list-style: none;
-  }
-
-  .message-text {
-    padding: 10px;
-    border-radius: 5px;
-  }
-
-  .sent {
-    background-color: #dcf8c6;
-    align-self: flex-end;
-  }
-
-  .received {
-    background-color: #f1f0f0;
-    align-self: flex-start;
-  }
-
-  .message-form {
-    display: flex;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 10px;
-    background-color: #f8f9fa;
-  }
-
-  .message-input {
-    flex: 1;
-    border-radius: 0;
-    border-right: none;
-  }
-
-  .btn-send {
-    border-radius: 0;
-  }
-
-  .chat-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-</style>
-{% endblock %}
-
-
-{% block content %}
-<div class="chat-container">
-  <div class="card flex-grow-1">
-    <!-- <div class="card-header bg-primary text-white"><a style="color: yellow;" href="login">Login</a> <a
-        style="color: yellow;" href="register">Register</a></div> -->
-
-    <div class="card-body messages-box">
-
-      <ul class="list-unstyled messages-list">
-
-        <li class="message received">
-          <div class="message-text">
-            <div class="message-sender">
-              <b>AI Chatbot</b>
-            </div>
-            <div class="message-content">
-              Hi {{user.username}}, I am your AI Chatbot, you can ask me anything.
-            </div>
-          </div>
-        </li>
-
-
-        {% for key , value in chats %}
-        {% if value.user == request.user %}
-
-
-        <li class="message sent">
-          <div class="message-text">
-            <div class="message-sender">
-              <b>You</b>
-            </div>
-            <div class="message-content">
-              {{value.message}}
-            </div>
-          </div>
-        </li>
-
-        <li class="message received">
-          <div class="message-text">
-            <div class="message-sender">
-              <b>AI Chatbot</b>
-            </div>
-            <div class="message-content">
-              {{value.response}}
-            </div>
-            <div class='class_{{key}}' style="display: none;">{{value.response}}</div>
-            <div class="d-flex p-2">
-              <div style="cursor: pointer;" onclick="copy('{{ key }}');" id='copy_{{key}}'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-check" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
-                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
-                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
-              </svg></div> <div><svg onclick="regenerate('{{ value.message }}')" style="display: inline; cursor:pointer;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
-                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
-              </svg></div>
-            </div>
-          </div>
-        </li>
-
-        {% endif %}
-        {% endfor %}
-
-      </ul>
-
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="mx-28 bg-[#FBFBFB] mb-5">
+  <p class="mt-20 text-sm font-poppins text-center">
+    <b>Hi {{user.username}},</b> I am your AI Chatbot, you can ask me anything.
+  </p>
+  <div class="messages-list">
+    {% for key, value in chats %} {% if value.user == request.user %}
+    <div class="mt-8 flex gap-x-5 items-center">
+      <img src="{% static 'images/basit.png' %}" alt="profile-img" />
+      <p class="font-normal font-poppins">{{ value.message }}</p>
     </div>
-    <br><br>
-    <br><br>
-    <br><br>
-    <form class="message-form">
-      {%csrf_token%}
-      <div class="input-group">
-        <input type="text" class="form-control message-input" placeholder="Type your message...">
-        <div class="input-group-append">
-          <button type="submit" class="btn btn-primary btn-send">Send</button>
+    <p class="text-xs mt-3 ml-14 font-poppins">{{ value.created_at }}</p>
+
+    <div class="mt-8">
+      <div class="flex items-start gap-x-3 w-[32%]">
+        <img src="{% static 'images/ai.png' %}" alt="AI" class="" />
+        <div class="relative bg-[#23C69E0F] w-full h-full px-4 py-3">
+          <label for="npm-install-copy-button" class="sr-only">Label</label>
+          <input
+            id="npm-install-copy-button"
+            type="text"
+            class="w-full"
+            value="{{ value.response }}"
+            disabled
+            readonly
+          />
+          <div class="class_{{ key }}" style="display: none">
+            {{ value.response }}
+          </div>
+          <div class="flex justify-end gap-x-2 mt-3">
+            <button
+              class="bg-white flex gap-x-2 items-center cursor-pointer px-2 -py-2"
+              onclick="regenerate('{{ value.message }}')"
+            >
+              <img src="{% static 'images/reload.png' %}" alt="reload" />
+              <p class="text-sm font-poppins">Regerenerate response</p>
+            </button>
+            <button
+              data-copy-to-clipboard-target="npm-install-copy-button"
+              data-tooltip-target="tooltip-copy-npm-install-copy-button"
+              class=""
+              onclick="copy('{{ key }}');"
+              id="copy_{{ key }}"
+            >
+              <span
+                id="default-icon"
+                class="bg-white flex gap-x-2 items-center px-2 -py-1"
+              >
+                <img
+                  src="{% static 'images/copy.png' %}"
+                  alt="copy"
+                  class="h-3"
+                />
+                <p class="text-sm font-poppins">Copy</p>
+              </span>
+            </button>
+          </div>
+          <div
+            id="tooltip-copy-npm-install-copy-button"
+            role="tooltip"
+            class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+          >
+            <span id="default-tooltip-message">Copy to clipboard</span>
+            <span id="success-tooltip-message" class="hidden">Copied!</span>
+            <div class="tooltip-arrow" data-popper-arrow></div>
+          </div>
         </div>
       </div>
+    </div>
+    <p class="text-xs mt-3 ml-14 font-poppins">{{ value.created_at }}</p>
+    {% endif %} {% endfor %}
+
+    <div class="mt-10">
+      <p class="text-sm text-[#B7B7B7] font-poppins mt-3 ml-12 line">Today</p>
+    </div>
+
+    <form class="message-form">
+      {% csrf_token %}
+      <div class="border-2 border-[#23C69E] rounded sticky bottom-5 bg-white shadow-lg p-3 mt-12">
+        <div class=" flex justify-between">
+            <div class="flex flex-1 items-center gap-x-2">
+                <img src="{% static 'images/magic-wand-tool.png' %}" alt="Send">
+                <input type="text" class="outline-none w-full message-input" placeholder="Ask any question">
+            </div>
+            <button type="submit">
+                <img src="{% static 'images/Send-Icon.png' %}" alt="Send">
+            </button>
+        </div>
+    </div>
     </form>
   </div>
 </div>
 
 <script>
-  const messagesList = document.querySelector('.messages-list');
-  const messageForm = document.querySelector('.message-form');
-  const messageInput = document.querySelector('.message-input');
+  const messagesList = document.querySelector(".messages-list");
+  const messageForm = document.querySelector(".message-form");
+  const messageInput = document.querySelector(".message-input");
 
   function copy(id) {
-    const messageDiv = document.querySelector('[class=class_'+id+']')
-    const copyDiv = document.querySelector('#copy_'+id)
+    const messageDiv = document.querySelector("[class=class_" + id + "]");
+    const copyDiv = document.querySelector("#copy_" + id);
     const copyHtml = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-check" viewBox="0 0 16 16">
   <path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
   <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
   <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
-</svg>`
+</svg>`;
 
-  const pasteHtml = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+    const pasteHtml = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
   <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-</svg>`
-navigator.clipboard.writeText(messageDiv.innerHTML).then(function() {
-  copyDiv.innerHTML = pasteHtml
-  setTimeout(() => {
-    copyDiv.innerHTML = copyHtml
-  },2000)
-}, function(err) {
-  console.error('Async: Could not copy text: ', err);
-});
-
-  
+</svg>`;
+    navigator.clipboard.writeText(messageDiv.innerHTML).then(
+      function () {
+        copyDiv.innerHTML = pasteHtml;
+        setTimeout(() => {
+          copyDiv.innerHTML = copyHtml;
+        }, 2000);
+      },
+      function (err) {
+        console.error("Async: Could not copy text: ", err);
+      }
+    );
   }
 
   function regenerate(message) {
-    const messageItem = document.createElement('li');
-    messageItem.classList.add('message', 'sent');
+    const messageItem = document.createElement("li");
+    messageItem.classList.add("message", "sent");
     messageItem.innerHTML = `
       <div class="message-text">
         <div class="message-sender">
@@ -188,46 +135,70 @@ navigator.clipboard.writeText(messageDiv.innerHTML).then(function() {
       </div>`;
     messagesList.appendChild(messageItem);
 
-    messageInput.value = '';
+    messageInput.value = "";
 
-    fetch('', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    fetch("", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
-        'csrfmiddlewaretoken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-        'message': message
-      })
+        csrfmiddlewaretoken: document.querySelector(
+          "[name=csrfmiddlewaretoken]"
+        ).value,
+        message: message,
+      }),
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         const response = data.response;
-        const id  = Date.now().toString()
-        const messageItem = document.createElement('li');
-        messageItem.classList.add('message', 'received');
+        const id = Date.now().toString();
+        const messageItem = document.createElement("div");
+        messageItem.classList.add("message", "received");
         messageItem.innerHTML = `
-        <div class="message-text">
-          <div class="message-sender">
-            <b>AI Chatbot</b>
-          <div>
-          <div class="message-content">
+        <input
+            id="npm-install-copy-button"
+            type="text"
+            class="w-full"
+            value="${response}"
+            disabled
+            readonly
+          />
+          <div class="class_{{ key }}" style="display: none">
             ${response}
           </div>
-          <div class='class_${id}' style="display: none;">${response}</div>          
-        </div>
-        <div class="d-flex p-2"><div style="cursor: pointer;" onclick='copy(${id});' id='copy_${id}'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-check" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
-  <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
-  <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
-</svg> </div> <div><svg onclick="regenerate('${data.message}');" style="display: inline; cursor:pointer;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
-              <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
-              <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
-            </svg></div></div></div>
+          <div class="flex justify-end gap-x-2 mt-3">
+            <button
+              class="bg-white flex gap-x-2 items-center cursor-pointer px-2 -py-2"
+              onclick="regenerate('${response.message}')"
+            >
+              <img src="{% static 'images/reload.png' %}" alt="reload" />
+              <p class="text-sm font-poppins">Regerenerate response</p>
+            </button>
+            <button
+              data-copy-to-clipboard-target="npm-install-copy-button"
+              data-tooltip-target="tooltip-copy-npm-install-copy-button"
+              class=""
+              onclick="copy('${id}');"
+              id="copy_${id}"
+            >
+              <span
+                id="default-icon"
+                class="bg-white flex gap-x-2 items-center px-2 -py-1"
+              >
+                <img
+                  src="{% static 'images/copy.png' %}"
+                  alt="copy"
+                  class="h-3"
+                />
+                <p class="text-sm font-poppins">Copy</p>
+              </span>
+            </button>
+          </div>
         `;
         messagesList.appendChild(messageItem);
       });
   }
 
-  messageForm.addEventListener('submit', (event) => {
+  messageForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
     const message = messageInput.value.trim();
@@ -235,8 +206,8 @@ navigator.clipboard.writeText(messageDiv.innerHTML).then(function() {
       return;
     }
 
-    const messageItem = document.createElement('li');
-    messageItem.classList.add('message', 'sent');
+    const messageItem = document.createElement("li");
+    messageItem.classList.add("message", "sent");
     messageItem.innerHTML = `
       <div class="message-text">
         <div class="message-sender">
@@ -248,45 +219,67 @@ navigator.clipboard.writeText(messageDiv.innerHTML).then(function() {
       </div>`;
     messagesList.appendChild(messageItem);
 
-    messageInput.value = '';
+    messageInput.value = "";
 
-    fetch('', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    fetch("", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
-        'csrfmiddlewaretoken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-        'message': message
-      })
+        csrfmiddlewaretoken: document.querySelector(
+          "[name=csrfmiddlewaretoken]"
+        ).value,
+        message: message,
+      }),
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         const response = data.response;
-        const id  = Date.now().toString()
-        const messageItem = document.createElement('li');
-        messageItem.classList.add('message', 'received');
+        const id = Date.now().toString();
+        const messageItem = document.createElement("div");
+        messageItem.classList.add("message", "received");
         messageItem.innerHTML = `
-        <div class="message-text">
-          <div class="message-sender">
-            <b>AI Chatbot</b>
-          <div>
-          <div class="message-content">
+        <input
+            id="npm-install-copy-button"
+            type="text"
+            class="w-full"
+            value="${response}"
+            disabled
+            readonly
+          />
+          <div class="class_{{ key }}" style="display: none">
             ${response}
           </div>
-          <div class='class_${id}' style="display: none;">${response}</div>          
-        </div>
-        <div class="d-flex p-2"><div style="cursor: pointer;" onclick='copy(${id});' id='copy_${id}'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-check" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
-  <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
-  <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
-</svg> </div> <div><svg onclick="regenerate('${data.message}');" style="display: inline; cursor:pointer;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
-              <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
-              <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
-            </svg></div></div></div>
+          <div class="flex justify-end gap-x-2 mt-3">
+            <button
+              class="bg-white flex gap-x-2 items-center cursor-pointer px-2 -py-2"
+              onclick="regenerate('${response.message}')"
+            >
+              <img src="{% static 'images/reload.png' %}" alt="reload" />
+              <p class="text-sm font-poppins">Regerenerate response</p>
+            </button>
+            <button
+              data-copy-to-clipboard-target="npm-install-copy-button"
+              data-tooltip-target="tooltip-copy-npm-install-copy-button"
+              class=""
+              onclick="copy('${id}');"
+              id="copy_${id}"
+            >
+              <span
+                id="default-icon"
+                class="bg-white flex gap-x-2 items-center px-2 -py-1"
+              >
+                <img
+                  src="{% static 'images/copy.png' %}"
+                  alt="copy"
+                  class="h-3"
+                />
+                <p class="text-sm font-poppins">Copy</p>
+              </span>
+            </button>
+          </div>
         `;
         messagesList.appendChild(messageItem);
       });
   });
-
 </script>
-
 {% endblock %}

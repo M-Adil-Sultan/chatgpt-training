@@ -1,0 +1,38 @@
+*{
+font-family: "poppins";
+}
+.line:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 47%;
+    height: 1px;
+    background-color: #B7B7B7;
+}
+
+.line {
+    position: relative;
+    text-align: center;
+}
+
+.line:after {
+    content: "";
+    position: absolute;
+    width: 47%;
+    right: 0;
+    top: 10px;
+    height: 1px;
+    background-color: #B7B7B7;
+}
+
+#profile-dropdown{
+    display: none;
+}
+
+.bg-color:nth-child(even) {
+    background-color: #FFFFFF;
+}
+.bg-color:nth-child(odd) {
+    background-color:#EEF8F5;
+}
