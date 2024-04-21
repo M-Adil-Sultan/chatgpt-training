@@ -176,7 +176,7 @@ def modify_log(request):
         chat_id = request.POST.get('chat_id')
         message = request.POST.get('message')
         response = request.POST.get('response')
-        print(f"Received form data - chat_id: {chat_id}, message: {message}, response: {response}")
+        # print(f"Received form data - chat_id: {chat_id}, message: {message}, response: {response}")
         # update data to database
         chat = Chat.objects.get(id=chat_id)
         chat.message = message

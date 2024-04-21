@@ -12,7 +12,7 @@
     <p class="text-xs mt-3 ml-14 font-poppins">{{ value.created_at }}</p>
 
     <div class="mt-8">
-      <div class="flex items-start gap-x-3 w-[32%]">
+      <div class="flex items-start gap-x-3 w-[90%]">
         <img src="{% static 'images/ai.png' %}" alt="AI" class="" />
         <div class="relative bg-[#23C69E0F] w-full h-full px-4 py-3">
           <label for="npm-install-copy-button" class="sr-only">Label</label>
@@ -73,22 +73,27 @@
     <div class="mt-10">
       <p class="text-sm text-[#B7B7B7] font-poppins mt-3 ml-12 line">Today</p>
     </div>
-
-    <form class="message-form">
-      {% csrf_token %}
-      <div class="border-2 border-[#23C69E] rounded sticky bottom-5 bg-white shadow-lg p-3 mt-12">
-        <div class=" flex justify-between">
-            <div class="flex flex-1 items-center gap-x-2">
-                <img src="{% static 'images/magic-wand-tool.png' %}" alt="Send">
-                <input type="text" class="outline-none w-full message-input" placeholder="Ask any question">
-            </div>
-            <button type="submit">
-                <img src="{% static 'images/Send-Icon.png' %}" alt="Send">
-            </button>
-        </div>
-    </div>
-    </form>
   </div>
+  <form class="message-form">
+    {% csrf_token %}
+    <div
+      class="border-2 border-[#23C69E] rounded sticky bottom-5 bg-white shadow-lg p-3 mt-12"
+    >
+      <div class="flex justify-between">
+        <div class="flex flex-1 items-center gap-x-2">
+          <img src="{% static 'images/magic-wand-tool.png' %}" alt="Send" />
+          <input
+            type="text"
+            class="outline-none w-full message-input"
+            placeholder="Ask any question"
+          />
+        </div>
+        <button type="submit">
+          <img src="{% static 'images/Send-Icon.png' %}" alt="Send" />
+        </button>
+      </div>
+    </div>
+  </form>
 </div>
 
 <script>
@@ -125,14 +130,10 @@
     const messageItem = document.createElement("li");
     messageItem.classList.add("message", "sent");
     messageItem.innerHTML = `
-      <div class="message-text">
-        <div class="message-sender">
-          <b>You</b>
-        </div>
-        <div class="message-content">
-          ${message}
-        </div>
-      </div>`;
+    <div class="mt-8 flex gap-x-5 items-center">
+      <img src="{% static 'images/basit.png' %}" alt="profile-img" />
+      <p class="font-normal font-poppins">${message}</p>
+    </div>`;
     messagesList.appendChild(messageItem);
 
     messageInput.value = "";
@@ -154,7 +155,12 @@
         const messageItem = document.createElement("div");
         messageItem.classList.add("message", "received");
         messageItem.innerHTML = `
-        <input
+        <div class="mt-8">
+      <div class="flex items-start gap-x-3 w-[90%]">
+        <img src="{% static 'images/ai.png' %}" alt="AI" class="" />
+        <div class="relative bg-[#23C69E0F] w-full h-full px-4 py-3">
+          <label for="npm-install-copy-button" class="sr-only">Label</label>
+          <input
             id="npm-install-copy-button"
             type="text"
             class="w-full"
@@ -162,13 +168,13 @@
             disabled
             readonly
           />
-          <div class="class_{{ key }}" style="display: none">
+          <div class="class_${id}" style="display: none">
             ${response}
           </div>
           <div class="flex justify-end gap-x-2 mt-3">
             <button
               class="bg-white flex gap-x-2 items-center cursor-pointer px-2 -py-2"
-              onclick="regenerate('${response.message}')"
+              onclick="regenerate('${message}')"
             >
               <img src="{% static 'images/reload.png' %}" alt="reload" />
               <p class="text-sm font-poppins">Regerenerate response</p>
@@ -193,7 +199,18 @@
               </span>
             </button>
           </div>
-        `;
+          <div
+            id="tooltip-copy-npm-install-copy-button"
+            role="tooltip"
+            class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+          >
+            <span id="default-tooltip-message">Copy to clipboard</span>
+            <span id="success-tooltip-message" class="hidden">Copied!</span>
+            <div class="tooltip-arrow" data-popper-arrow></div>
+          </div>
+        </div>
+      </div>
+    </div> `;
         messagesList.appendChild(messageItem);
       });
   }
@@ -206,17 +223,13 @@
       return;
     }
 
-    const messageItem = document.createElement("li");
+    const messageItem = document.createElement("div");
     messageItem.classList.add("message", "sent");
     messageItem.innerHTML = `
-      <div class="message-text">
-        <div class="message-sender">
-          <b>You</b>
-        </div>
-        <div class="message-content">
-          ${message}
-        </div>
-      </div>`;
+    <div class="mt-8 flex gap-x-5 items-center">
+      <img src="{% static 'images/basit.png' %}" alt="profile-img" />
+      <p class="font-normal font-poppins">${message}</p>
+    </div>`;
     messagesList.appendChild(messageItem);
 
     messageInput.value = "";
@@ -238,7 +251,12 @@
         const messageItem = document.createElement("div");
         messageItem.classList.add("message", "received");
         messageItem.innerHTML = `
-        <input
+        <div class="mt-8">
+      <div class="flex items-start gap-x-3 w-[90%]">
+        <img src="{% static 'images/ai.png' %}" alt="AI" class="" />
+        <div class="relative bg-[#23C69E0F] w-full h-full px-4 py-3">
+          <label for="npm-install-copy-button" class="sr-only">Label</label>
+          <input
             id="npm-install-copy-button"
             type="text"
             class="w-full"
@@ -246,13 +264,13 @@
             disabled
             readonly
           />
-          <div class="class_{{ key }}" style="display: none">
+          <div class="class_${id}" style="display: none">
             ${response}
           </div>
           <div class="flex justify-end gap-x-2 mt-3">
             <button
               class="bg-white flex gap-x-2 items-center cursor-pointer px-2 -py-2"
-              onclick="regenerate('${response.message}')"
+              onclick="regenerate('${message}')"
             >
               <img src="{% static 'images/reload.png' %}" alt="reload" />
               <p class="text-sm font-poppins">Regerenerate response</p>
@@ -277,7 +295,18 @@
               </span>
             </button>
           </div>
-        `;
+          <div
+            id="tooltip-copy-npm-install-copy-button"
+            role="tooltip"
+            class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700"
+          >
+            <span id="default-tooltip-message">Copy to clipboard</span>
+            <span id="success-tooltip-message" class="hidden">Copied!</span>
+            <div class="tooltip-arrow" data-popper-arrow></div>
+          </div>
+        </div>
+      </div>
+    </div> `;
         messagesList.appendChild(messageItem);
       });
   });
