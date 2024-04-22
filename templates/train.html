@@ -1,106 +1,181 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% load static %} {% block title %}Train Dataset{% endblock %} {% block content %}
+<div class="mx-20 my-10">
+  <div class="flex justify-between items-center">
+    <p class="font-poppins font-bold text-2xl text-black">Train Dataset</p>
+    <!-- Table to display questions and answers -->
+    {% if request.session.success == 5 %}
+    <div id="alert"></div>
+    {% endif %}
+    <div class="flex gap-x-3">
+       <!-- make button for initiate training -->
+      <form method="post" action="{% url 'chain_initializer' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <button type="submit" class="bg-[#0085FF] w-36 h-10 rounded text-white">
+          Initiate Training
+        </button>
+      </form>
 
-{% block title %}Train Page{% endblock %}
-{% load bootstrap4 %}
-{% block content %}
-  <div class="container mt-4">
-    <h1 class="mb-4">Train Dataset</h1>
-    
-<!-- Table to display questions and answers -->
-{% if request.session.success == 5 %}
-<div id="alert"></div>
-
-{% endif %}
-<div class="card mt-4">
-  <div class="card-body">
-    <h5 class="card-title mb-3">Question and Answers</h5>
-    <table class="table table-striped">
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Question</th>
-          <th scope="col">Answer</th>
-          <th scope="col">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for qa in question_answers %}
-          <tr>
-            <th scope="row">{{ forloop.counter }}</th>
-            <td>{{ qa.question }}</td>
-            <td>{{ qa.answers }}</td>
-            <td>
-              <form method="post" action="{% url 'delete' qa.id %}" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-              </form>
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-
-    <!-- Pagination -->
-    <div class="pagination justify-content-center">
-      {% bootstrap_pagination question_answers %}
+      <div class="flex items-center border rounded gap-x-2">
+        <img src="{% static 'images/Icon.png' %}" alt="" class="pl-2 h-4" />
+        <input type="text" class="outline-none" placeholder="Search.." />
+      </div>
+    </div>
+  </div>
+  <div id="question_answers_container" class="mt-3">
+    <div
+      class="flex gap-x-6 rounded-t text-center bg-black h-10 items-center text-white w-[100%] px-2"
+    >
+      <p class="w-[2%] text-center">#</p>
+      <p class="w-[40%]">Question</p>
+      <p class="w-[40%]">Answer</p>
+      <p class="w-[18%] text-center">Actions</p>
+    </div>
+    {% for qa in question_answers %}
+    <div class="flex gap-x-6 bg-color h-18 p-4 w-[100%] px-2">
+      <p class="w-[2%] text-sm text-center">{{ forloop.counter }}</p>
+      <p class="w-[40%] text-sm">
+        {{ qa.question }}
+        <!-- <b
+                    class="hidden font-normal" id="more-text">
+                    Sed eu enim malesuada, fermentum mi eu, finibus velit. Nam quis blandit velit, vel vehicula
+                    neque. Etiam eu lorem suscipit, sollicitudin ante at, pharetra quam.
+                </b> 
+                <button id="toggle-btn" class="font-bold hover:underline text-black font-poppins">Read More</button>
+                <button id="hide-btn" class="hidden font-bold hover:underline text-black">Hide</button> -->
+      </p>
+      <div class="w-[40%]">
+        <p class="text-sm">{{ qa.answers }}</p>
+      </div>
+      <p class="text-sm"></p>
+      <div class="w-[18%]">
+        <form
+          method="post"
+          action="{% url 'delete' qa.id %}"
+          style="display: inline"
+        >
+          {% csrf_token %}
+          <button
+            type="submit"
+            class="text-white bg-[#EF7979] rounded h-8 w-full mt-2"
+          >
+            Delete
+          </button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="text-center mx-auto mt-8">
+      <button id="load_more_button" 
+        class="cursor-pointer border items-center justify-center h-8 flex w-32 mx-auto gap-x-1 rounded border-[#2D2D2D]"
+      >
+        <p class="font-medium text-md">Load more</p>
+        <img src="{% static 'images/arrow.png' %}" alt="" class="h-4" />
+    </form>
+  </div>
+  <div class="grid grid-cols-2 gap-x-12 mt-8">
+    <div class="col-span-1">
+      <form method="post" action="{% url 'train' %}">
+        {% csrf_token %}
+      <div>
+        <p class="text-3xl font-medium">Insert New Question and Answer</p>
+      </div>
+      <div class="mt-5">
+        <label class="text-sm font-medium">Question*</label>
+        <input
+          type="text"
+          class="mt-1 outline-none rounded h-12 ps-3 w-full bg-[#F5F5F5]"
+          placeholder="Type here"
+        />
+      </div>
+      <div class="mt-5">
+        <label class="text-sm font-medium">Answers*</label>
+        <div
+          class="flex items-center mt-1 rounded h-12 px-3 w-full bg-[#F5F5F5]"
+        >
+          <input
+            type="text"
+            class="mt-1 rounded h-10 outline-none w-full bg-[#F5F5F5]"
+            placeholder="Type here"
+          />
+        </div>
+      </div>
+      <div>
+        <a href="#"
+          ><button type="submit"
+            class="w-full mt-8 bg-[#E5FE0C] text-black text-md font-medium rounded h-10"
+          >
+            Submit Text Feild
+          </button></a
+        >
+      </div>
+    </div>
+    <div class="col-span-1">
+      <form method="post" action="{% url 'upload_excel' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+      <div class="flex items-center gap-x-2">
+        <img src="{% static 'images/cloud.png' %}" alt="" class="border rounded-full p-3" />
+        <p class="text-3xl font-medium">Upload Excel File</p>
+      </div>
+      <div class="border-2 border-dashed h-40 mt-5 rounded flex justify-center">
+        <label for="drop-file" class="cursor-pointer p-3 text-center">
+          <img src="{% static 'images/cloud.png' %}" alt="" class="mx-auto" />
+          <p class="mt-2 text-lg font-medium">
+            Choose a file or drag & drop it here
+          </p>
+          <p class="text-md font-medium text-[#555555] text-center mt-1">
+            Excel File formats, up to 50MB
+          </p>
+          <button class="bg-[#555555] text-white px-5 py-1 mt-1 rounded">
+            <label for="id_excel_file" class="bg-[#555555] text-white px-5 py-1 mt-1 rounded cursor-pointer"> Browse File</label>
+            <input type="file" name="excel_file" id="id_excel_file" class="hidden" />
+          </button>
+        </label>
+      </div>
+      <div>
+        <a href="#"
+          ><button type="submit"
+            class="w-full mt-6 bg-[#23C69E] text-white text-md font-medium rounded h-10"
+          >
+            Upload Excel File
+          </button></a
+        >
+      </div>
+      </form>
     </div>
   </div>
 </div>
 
-
-    <!-- Form to insert new questions and answers -->
-<div class="card mt-4">
-  <div class="card-body">
-    <h5 class="card-title mb-3">Insert New Question and Answer</h5>
-    <form method="post" action="{% url 'train' %}">
-      {% csrf_token %}
-
-      {{ form.as_p }}  <!-- Render the form fields -->
-
-      <button type="submit" class="btn btn-primary">Submit Text Fields</button>
-    </form>
-  </div>
-</div>
-
-<!-- Form to upload Excel file -->
-<div class="card mt-4">
-  <div class="card-body">
-    <h5 class="card-title mb-3">Upload Excel File</h5>
-    <form method="post" action="{% url 'upload_excel' %}" enctype="multipart/form-data">
-      {% csrf_token %}
-
-      <!-- Add a file input field for uploading Excel file -->
-      <div class="form-group">
-        <label for="id_excel_file">Choose Excel File</label>
-        <input type="file" name="excel_file" class="form-control-file" id="id_excel_file">
-      </div>
-
-      <button type="submit" class="btn btn-success">Upload Excel File</button>
-    </form>
-    <br>
-    <!-- make button for initiate training -->
-    <form method="post" action="{% url 'chain_initializer' %}" enctype="multipart/form-data">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-danger">Initiate Training</button>
-  </div>
-</div>
-        </div>
-
-
-
-{% endblock %}
-
-{% block scripts %}
+{% endblock %} {% block scripts %}
 <script>
-    $(document).ready(()=>{ 
-      if (document.querySelector('#alert')){
-          Swal.fire({
-            title: "Success",
-            text: "Question saved successfully",
-            icon: "success"
-          });
-          //document.getElementById('alert').remove()
-        }
-    })
+  $(document).ready(() => {
+    if (document.querySelector("#alert")) {
+      Swal.fire({
+        title: "Success",
+        text: "Question saved successfully",
+        icon: "success",
+      });
+      //document.getElementById('alert').remove()
+    }
+
+    let nextPageNumber = "{{ question_answers.next_page_number|default:1 }}"; // Get the initial page number or default to 1
+        
+        $('#load_more_button').on('click', function() {
+            let nextPageUrl = "{% url 'train' %}?page=" + nextPageNumber; // Construct the URL for the next page
+            $.ajax({
+                url: nextPageUrl,
+                type: 'GET',
+                success: function(data) {
+                    // Increment the page number for the next request
+                    nextPageNumber++;
+                    // Append the new content to the container
+                    $('#question_answers_container').append($(data).find('#question_answers_container').html());
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching next page:', error);
+                }
+            });
+        });
+  });
 </script>
 {% endblock %}
