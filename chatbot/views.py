@@ -20,6 +20,12 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 import time
 import uuid
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.conf import settings
+from django.contrib import messages
+from django.shortcuts import redirect, get_object_or_404
 
 # Set the OpenAI API key as an environment variable
 os.environ["OPENAI_API_KEY"] = "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"
@@ -143,16 +149,53 @@ def register(request):
         if password1 == password2:
             try:
                 user = User.objects.create_user(username, email, password1)
+                user.is_active = False  # Set user as inactive until admin approval
                 user.save()
-                auth.login(request, user)
-                return redirect('chatbot')
-            except:
+                
+
+                # Send email to admin for approval
+                email_from = settings.EMAIL_HOST_USER
+                base_url = settings.BASE_URL
+                recipient_list = ['example@gmail.com', ] # add recipient email here
+                # Load email template
+                html_message = render_to_string('approval_email.html', {'user_id':user.id,'username': username, 'email': email,'base_url': base_url,})
+                plain_message = strip_tags(html_message)
+                
+                send_mail(
+                    'New User Registration - Approval Required',
+                    plain_message,
+                    email_from,
+                    recipient_list,
+                    html_message=html_message,
+                    fail_silently=False,
+                )
+                
+                # Redirect user to the "Wait for Approval" page
+                return render(request, 'wait_for_approval.html')
+
+            except Exception as e:
+                print(f"Error Creating account: {e}")
                 error_message = 'Error creating account'
                 return render(request, 'register.html', {'error_message': error_message})
         else:
             error_message = "Passwords don't match"
             return render(request, 'register.html', {'error_message': error_message})
     return render(request, 'register.html')
+
+
+
+def approve_user(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+    # Activate the user account
+        user.is_active = True
+        user.save()
+        # Redirect to a success page or any other appropriate page
+        return render(request, 'success.html', {'user_approved': "True"}) 
+    except User.DoesNotExist:
+        return None
+    
+    
 
 def logout(request):
     auth.logout(request)
