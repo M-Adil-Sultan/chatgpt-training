@@ -156,9 +156,9 @@ def register(request):
                 # Send email to admin for approval
                 email_from = settings.EMAIL_HOST_USER
                 base_url = settings.BASE_URL
-                recipient_list = ['example@gmail.com', ] # add recipient email here
+                recipient_list = ['admin@gmail.com', ] # add recipient email here
                 # Load email template
-                html_message = render_to_string('approval_email.html', {'user_id':user.id,'username': username, 'email': email,'base_url': base_url,})
+                html_message = render_to_string('request_approval_email.html', {'user_id':user.id,'username': username, 'email': email,'base_url': base_url,})
                 plain_message = strip_tags(html_message)
                 
                 send_mail(
@@ -190,6 +190,21 @@ def approve_user(request, user_id):
     # Activate the user account
         user.is_active = True
         user.save()
+        email_from = settings.EMAIL_HOST_USER
+        base_url = settings.BASE_URL
+        recipient_list = [user.email, ] # add recipient email here
+        # Load email template
+        html_message = render_to_string('approval_email.html', {'username': user.username, 'email': user.email,'base_url': base_url,})
+        plain_message = strip_tags(html_message)
+        
+        send_mail(
+            'THE SOCIAL SALES LAB - Registeration Approved',
+            plain_message,
+            email_from,
+            recipient_list,
+            html_message=html_message,
+            fail_silently=False,
+        )
         # Redirect to a success page or any other appropriate page
         return render(request, 'success.html', {'user_approved': "True"}) 
     except User.DoesNotExist:
