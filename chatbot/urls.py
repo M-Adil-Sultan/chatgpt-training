@@ -10,5 +10,6 @@ urlpatterns = [
     path('insert_to_train/<int:chat_id>/', views.insert_to_train, name='insert_to_train'),
     path('modify_log/', views.modify_log, name='modify_log'),
     path('chain_initializer/', views.chain_initializer, name='chain_initializer'),
+    path('approve/<int:user_id>/', views.approve_user, name='approve_user'),
 
 ]

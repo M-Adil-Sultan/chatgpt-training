@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% block scripts %}
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              poppins: ["Poppins", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    {% endblock %}
+    <title>New User Registration - Approval Required</title>
+  </head>
+  <body>
+    <div class="mx-auto col-span-1 w-[55%] flex flex-col justify-center">
+      <p class="text-4xl font-poppins font-medium">Hello Admin,</p>
+      <p class="text-md mt-2 font-poppins font-normal text-[#2D2D2D]">
+        A new user has registered on the website and is awaiting approval.
+      </p>
+      <p class="text-md mt-2 font-poppins font-normal text-[#2D2D2D]">User Details:</p>
+      <ul>
+        <li class="text-4xl font-poppins font-medium"><strong>Username:</strong> {{ username }}</li>
+        <li class="text-4xl font-poppins font-medium"><strong>Email:</strong> {{ email }}</li>
+      </ul>
+      <p class="text-md mt-2 font-poppins font-normal text-[#2D2D2D]">
+        Please take necessary action to approve the user's account.
+      </p>
+      <p class="text-md mt-2 font-poppins font-normal text-[#2D2D2D]">
+        To approve or activate the user, click the following link:
+      </p>
+      <a
+        href="{{ base_url }}{% url 'approve_user' user_id %}">
+        <button class="w-full bg-[#E5FE0C] font-poppins text-black text-md font-medium rounded h-10">
+        Approve User
+      </button></a
+      >
+      <p class="text-4xl font-poppins font-medium">Thank you.</p>
+    </div>
+  </body>
+</html>
