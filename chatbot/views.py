@@ -156,7 +156,7 @@ def register(request):
                 # Send email to admin for approval
                 email_from = settings.EMAIL_HOST_USER
                 base_url = settings.BASE_URL
-                recipient_list = ['agha.mushin@gmail.com', ] # add recipient email here
+                recipient_list = ['gha.muhsin@nativebrains.com', ] # add recipient email here
                 # Load email template
                 html_message = render_to_string('request_approval_email.html', {'user_id':user.id,'username': username, 'email': email,'base_url': base_url,})
                 plain_message = strip_tags(html_message)
