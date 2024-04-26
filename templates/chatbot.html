@@ -1,9 +1,9 @@
 {% extends 'base.html' %} {% load static %} {% block content %}
-<div class="mx-28 bg-[#FBFBFB] mb-5">
-  <p class="mt-20 text-sm font-poppins text-center">
+<div class="bg-[#FBFBFB] my-10 px-4 py-2 md:px-16 md:py-10">
+  <p class=" text-sm font-poppins text-center bg-white p-4">
     <b>Hi {{user.username}},</b> I am your AI Chatbot, you can ask me anything.
   </p>
-  <div class="messages-list">
+  <div class="messages-list mt-5">
     {% for key, value in chats %} {% if value.user == request.user %}
     <div class="mt-8 flex gap-x-5 items-center">
       <img src="{% static 'images/basit.png' %}" alt="profile-img" />
@@ -16,14 +16,9 @@
         <img src="{% static 'images/ai.png' %}" alt="AI" class="" />
         <div class="relative bg-[#23C69E0F] w-full h-full px-4 py-3">
           <label for="npm-install-copy-button" class="sr-only">Label</label>
-          <input
-            id="npm-install-copy-button"
-            type="text"
-            class="w-full"
-            value="{{ value.response }}"
-            disabled
-            readonly
-          />
+          <p id="npm-install-copy-button">
+            {{ value.response }}
+          </p>
           <div class="class_{{ key }}" style="display: none">
             {{ value.response }}
           </div>
@@ -74,7 +69,7 @@
       <p class="text-sm text-[#B7B7B7] font-poppins mt-3 ml-12 line">Today</p>
     </div>
   </div>
-  <form class="message-form">
+  <form class="message-form sticky bottom-2">
     {% csrf_token %}
     <div
       class="border-2 border-[#23C69E] rounded sticky bottom-5 bg-white shadow-lg p-3 mt-12"
@@ -84,7 +79,7 @@
           <img src="{% static 'images/magic-wand-tool.png' %}" alt="Send" />
           <input
             type="text"
-            class="outline-none w-full message-input"
+            class="outline-none w-full message-input border-none focus:outline-none"
             placeholder="Ask any question"
           />
         </div>
