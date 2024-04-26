@@ -138,6 +138,12 @@ def login(request):
             return render(request, 'login.html', {'error_message': error_message})
     else:
         return render(request, 'login.html')
+    
+def terms(request):
+    return render(request, 'terms.html')
+
+def privacy(request):
+    return render(request, 'privacy.html')
 
 def register(request):
     if request.method == 'POST':
@@ -156,9 +162,9 @@ def register(request):
                 # Send email to admin for approval
                 email_from = settings.EMAIL_HOST_USER
                 base_url = settings.BASE_URL
-                recipient_list = ['agha.muhsin@nativebrains.com', ] # add recipient email here
+                recipient_list = ['saif@nativebrains.com', ] # add recipient email here
                 # Load email template
-                html_message = render_to_string('request_approval_email.html', {'user_id':user.id,'username': username, 'email': email,'base_url': base_url,})
+                html_message = render_to_string('request_approval_email_new.html', {'user_id':user.id,'username': username, 'email': email,'base_url': base_url,})
                 plain_message = strip_tags(html_message)
                 
                 send_mail(
