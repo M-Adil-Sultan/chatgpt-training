@@ -5,5 +5,5 @@ urlpatterns = [
     path('', views.train, name='train'),
     path('upload_excel/', views.upload_excel, name='upload_excel'),
     path('delete/<int:id>/', views.delete, name='delete'),
-    
+    path('search/', views.search_train_dataset, name='search_train_dataset'),
 ]
