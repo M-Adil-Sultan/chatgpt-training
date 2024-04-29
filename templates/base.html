@@ -1,137 +1,112 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      rel="stylesheet"
-      href="{% static 'css/index.css' %}"
-      type="text/css"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.js"
-      integrity="sha512-bUju8VkXhCQgW7zCHSdiIDpECo/lqzChkKrKoc1v2PL2XqO/0Q2Y8dhu07+q6Rk+1c1xr6cfE0VZnumgwy93Ig=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:slnt@-10..0&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,800;1,300;1,400&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-      rel="stylesheet"
-    />
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.js"
-      integrity="sha512-bUju8VkXhCQgW7zCHSdiIDpECo/lqzChkKrKoc1v2PL2XqO/0Q2Y8dhu07+q6Rk+1c1xr6cfE0VZnumgwy93Ig=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              poppins: ["Poppins", "sans-serif"],
-            },
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{% static 'css/index.css' %}" type="text/css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"  rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:slnt@-10..0&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,800;1,300;1,400&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            poppins: ["Poppins", "sans-serif"],
           },
         },
-      };
-    </script>
-    <title>{% block title %}{% endblock %}</title>
-    <script>
-      function togglefun() {
-        var x = document.getElementById("profile-dropdown");
+      },
+    };
+  </script>
+  <title>{% block title %}{% endblock %}</title>
+</head>
 
-        if (x.style.display === "block") {
-          x.style.display = "none";
-        } else {
-          x.style.display = "block";
-
-        }
-      }
-    </script>
-  </head>
-  <body>
-    <header class="border-b sticky top-0 shadow-lg">
-      <div class="flex px-20 justify-between items-center">
-        <div>
-          <a href="#"
-            ><img src="{% static 'images/logo.png' %}" alt="logo" class="h-16"
-          /></a>
-        </div>
-        <div class="flex gap-x-5 items-center">
-          <a href="{% url 'chatbot' %}" class="text-md font-medium text-black"
-            >Chat</a
-          >
-          <a href="{% url 'train' %}" class="text-md font-medium text-black"
-            >Train</a
-          >
-          <a href="{% url 'chatlog' %}" class="text-md font-medium text-black"
-            >Log</a
-          >
-          {% if user.is_authenticated %}
-          <button
-            data-dropdown-toggle="profile-dropdown"
-            data-modal-hide="profile-dropdown"
-            class="flex items-center gap-x-2"
-            onclick="togglefun()"
-          >
-            <img
-              src="{% static 'images/profile-img.png' %}"
-              alt="profile-img"
-              class="h-12 border-2 border-black rounded-full"
-            />
-            <img
-              src="{% static 'images/arrow.png' %}"
-              alt="arrow"
-              class="h-4"
-            />
-          </button>
-          <div id="profile-dropdown">
-            <div class="bg-white w-56 mr-5 p-3 shadow-lg rounded-lg">
-              <div class="flex gap-x-2 items-center">
-                <img
-                  src="{% static 'images/profile-img.png'%}"
-                  alt="profile-img"
-                />
-                <div class="flex flex-col">
-                  <p class="text-black font-medium text-md">Welcome!</p>
-                  <p class="text-[#555555] font-medium text-sm">
-                    {{ user.username }}
-                  </p>
-                </div>
-              </div>
-              <div class="text-start flex mb-3 flex-col gap-y-3 pl-3 mt-5">
-                <button class="flex gap-x-2 items-center">
-                  <img
-                    src="{% static 'images/settings.png' %}"
-                    alt="settings"
-                  />
-                  <p class="text-black font-medium">Profile Settings</p>
-                </button>
-                <a href="{% url 'logout' %}" class="flex gap-x-2 items-center">
-                  <img src="{% static 'images/signout.png' %}" alt="signout" />
-                  <p class="text-black font-medium">Sign Out</p>
-                </a>
+<body>
+  <header class="border-b sticky top-0 shadow-lg bg-white z-10">
+    <div class="flex px-20 justify-between items-center">
+      <div>
+        <a href="#"><img src="{% static 'images/logo.png' %}" alt="logo" class="h-16" /></a>
+      </div>
+      <div class="flex gap-x-5 items-center">
+        <a href="{% url 'chatbot' %}" class="text-md font-medium text-black">Chat</a>
+        <a href="{% url 'train' %}" class="text-md font-medium text-black">Train</a>
+        <a href="{% url 'chatlog' %}" class="text-md font-medium text-black">Log</a>
+        
+        {% if user.is_authenticated %}
+        <button data-dropdown-toggle="profileDropdown" class="flex items-center gap-x-2">
+          <img src="{% static 'images/profile-img.png' %}" alt="profile-img"
+            class="h-12 border-2 border-black rounded-full" />
+          <img src="{% static 'images/arrow.png' %}" alt="arrow" class="h-4" />
+        </button>
+        <div id="profileDropdown" class="hidden">
+          <div class="bg-white w-56 mr-5 p-3 shadow-lg rounded-lg">
+            <div class="flex gap-x-2 items-center">
+              <img src="{% static 'images/profile-img.png'%}" alt="profile-img" />
+              <div class="flex flex-col">
+                <p class="text-black font-medium text-md">Welcome!</p>
+                <p class="text-[#555555] font-medium text-sm">
+                  {{ user.username }}
+                </p>
               </div>
             </div>
+            <div class="text-start flex mb-3 flex-col gap-y-3 pl-3 mt-5">
+              <button class="flex gap-x-2 items-center">
+                <img src="{% static 'images/settings.png' %}" alt="settings" />
+                <p class="text-black font-medium">Profile Settings</p>
+              </button>
+              <a href="{% url 'logout' %}" class="flex gap-x-2 items-center">
+                <img src="{% static 'images/signout.png' %}" alt="signout" />
+                <p class="text-black font-medium">Sign Out</p>
+              </a>
+            </div>
           </div>
-          {% else %}
-          <a href="{% url 'login' %}" class="text-md font-medium text-black"
-            >Login</a
-          >
-          <a href="{% url 'register' %}" class="text-md font-medium text-black"
-            >Register</a
-          >
-          {% endif %}
         </div>
+        {% else %}
+        <a href="{% url 'login' %}" class="text-md font-medium text-black">Login</a>
+        <a href="{% url 'register' %}" class="text-md font-medium text-black">Register</a>
+        {% endif %}
       </div>
-    </header>
-    <div class="container">{% block content %}{% endblock %}</div>
+    </div>
+  </header>
+  <div class="container mx-auto">{% block content %}{% endblock %}</div>
 
-    {% block scripts %}    {% endblock %}
-  </body>
+  {% block scripts %} {% endblock %}
+  <script>
+    // document.addEventListener("DOMContentLoaded", function () {
+    //   document.addEventListener("click", function (event) {
+    //     const dropdown = document.getElementById("profile-dropdown");
+    //     const targetElement = event.target;
+
+    //     if (!dropdown.contains(targetElement)) {
+    //       if (dropdown.style.display === "block") {
+    //         dropdown.style.display = "none";
+    //       }
+    //     }
+    //   });
+
+    //   var dropdown = document.getElementById("profile-dropdown");
+    //   alert('here')
+    //   dropdown.style.display = "none";
+    // });
+
+    // function togglefun() {
+    //   const dropdown = document.getElementById("profile-dropdown");
+    //   if (dropdown.style.display === "block") {
+    //     dropdown.style.display = "none";
+    //   } else {
+    //     dropdown.style.display = "block";
+    //     alert(dropdown.style.display)
+    //   }
+    // }
+  </script>
+</body>
+
 </html>

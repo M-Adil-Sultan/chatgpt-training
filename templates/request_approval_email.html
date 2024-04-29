@@ -24,29 +24,29 @@
       };
     </script>
     {% endblock %}
-    <title>Approval Email</title>
+    <title>New User Registration - Approval Required</title>
   </head>
   <body>
     <div class="mx-auto col-span-1 w-[55%] flex flex-col justify-center">
-      <p class="text-4xl font-poppins font-medium">Hello {{ username }},</p>
+      <p class="text-4xl font-poppins font-medium">Hello Admin,</p>
       <p class="text-md mt-2 font-poppins font-normal text-[#2D2D2D]">
-        Welcome Chatbot Ai..
+        A new user has registered on the website and is awaiting approval.
       </p>
-      <p class="text-md mt-2 font-poppins font-normal text-[#2D2D2D]">Your request of registeration on THE SOCIAL SALES LAB with  </p>
+      <p class="text-md mt-2 font-poppins font-normal text-[#2D2D2D]">User Details:</p>
       <ul>
         <li class="text-4xl font-poppins font-medium"><strong>Username:</strong> {{ username }}</li>
         <li class="text-4xl font-poppins font-medium"><strong>Email:</strong> {{ email }}</li>
       </ul>
       <p class="text-md mt-2 font-poppins font-normal text-[#2D2D2D]">
-        has been approved.
+        Please take necessary action to approve the user's account.
       </p>
       <p class="text-md mt-2 font-poppins font-normal text-[#2D2D2D]">
-        To login and get started, please click the following link:
+        To approve or activate the user, click the following link:
       </p>
       <a
-        href="{{ base_url }}{% url 'login' %}">
+        href="{{ base_url }}{% url 'approve_user' user_id %}">
         <button class="w-full bg-[#E5FE0C] font-poppins text-black text-md font-medium rounded h-10">
-        Login Page
+        Approve User
       </button></a
       >
       <p class="text-4xl font-poppins font-medium">Thank you.</p>

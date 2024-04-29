@@ -1,6 +1,7 @@
-*{
-font-family: "poppins";
+* {
+    font-family: "poppins";
 }
+
 .line:before {
     content: "";
     position: absolute;
@@ -26,13 +27,33 @@ font-family: "poppins";
     background-color: #B7B7B7;
 }
 
-#profile-dropdown{
+/* #profileDropdown{
     display: none;
-}
+} */
 
 .bg-color:nth-child(even) {
     background-color: #FFFFFF;
 }
+
 .bg-color:nth-child(odd) {
-    background-color:#EEF8F5;
+    background-color: #EEF8F5;
+}
+
+/* train page */
+.trains-table-headers {
+    display: none !important;
+}
+
+.trains-table-headers:first-child {
+    display: flex !important;
+}
+
+.morecontent span {
+    display: none;
+}
+
+.morelink {
+    display: block;
+    font-weight: 600;
+    font-family: 'Poppins';
 }

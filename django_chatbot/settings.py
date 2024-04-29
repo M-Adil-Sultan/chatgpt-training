@@ -16,7 +16,7 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-BASE_URL = 'http://127.0.0.1:8000/' #add Base url
+BASE_URL = 'http://64.23.144.252' #add Base url
 
 
 # Quick-start development settings - unsuitable for production
@@ -143,5 +143,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'example@gmail.com' #write sender email
-EMAIL_HOST_PASSWORD = '***********' #write password related to above email
+EMAIL_HOST_USER = 'saif@nativebrains.com' #write sender email
+EMAIL_HOST_PASSWORD = 'exxw klqb qkyj birq' #write password related to above email
