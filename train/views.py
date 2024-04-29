@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.core.files.storage import FileSystemStorage
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
 
 
 def train(request):
@@ -49,7 +50,14 @@ def train(request):
         form = TrainForm()
     return render(request, 'train.html', {'question_answers': question_answers, 'form': form})
     
-
+def search_train_dataset(request):
+    query = request.GET.get('q')
+    if query:
+        # Filter Train_dataset objects based on the search query in questions or answers
+        train_data = Train_dataset.objects.filter(Q(question__icontains=query) | Q(answers__icontains=query))
+    else:
+        train_data = Train_dataset.objects.all()
+    return render(request, 'train.html', {'question_answers': train_data})
 
 def upload_excel(request):
     if request.method == 'POST':
