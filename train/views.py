@@ -12,7 +12,7 @@ from django.db.models import Q
 def train(request):
     
     # Fetch all data from the Train_dataset model
-    all_question_answers = Train_dataset.objects.all()
+    all_question_answers = Train_dataset.objects.all().order_by('-created_at')
     request.session['success'] = request.session.get('success',0) + 3
 
     # Paginate the queryset
@@ -93,6 +93,17 @@ def handle_uploaded_excel(excel_file):
         fs.delete(filename)
     else:
         print("File does not exist:", file_path)
+        
+def insert_via_form(request):
+    if request.method == 'POST':
+        question = request.POST.get('question')
+        answer = request.POST.get('answer')
+    # Insert into Train_dataset
+        Train_dataset.objects.create(question=question, answers=answer)
+
+        return HttpResponse("Inserted into Train_dataset successfully!")
+    else:
+        return HttpResponse("Invalid request")
 
 
 def delete(request, id):

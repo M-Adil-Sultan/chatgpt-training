@@ -1,4 +1,5 @@
-{% extends 'base.html' %} {% load static %} {% block title %}Train Dataset{% endblock %} {% block content %}
+{% extends 'base.html' %}{% load count_tag %} {% load static %} {% block title %}Train Dataset{% endblock %} {% block content %}
+{% initialize 0 as initial_value %}
 <div class="my-10 px-4 md:px-0">
   <div class="flex justify-between items-center flex-wrap md:flex-nowrap space-y-4 md:space-y-0">
     <p class="font-poppins font-bold text-2xl text-black">Train Dataset</p>
@@ -33,8 +34,10 @@
       <p class="w-[18%] text-center">Actions</p>
     </div>
     {% for qa in question_answers %}
+    <!-- {% increment 'initial_value' %} -->
     <div class="flex gap-x-6 bg-color h-18 p-4 w-[100%] px-2">
       <p class="w-[2%] text-sm text-center">{{ forloop.counter }}</p>
+      <!-- <p class="w-[2%] text-sm text-center">{{ initial_value }}</p> -->
       <div class="w-[40%] text-sm">
         <p class="overflow-hidden more-content">{{ qa.question }}</p>
       </div>
@@ -62,19 +65,19 @@
   </form>
   <div class="grid grid-cols-2 gap-x-12 mt-8 space-y-4">
     <div class="col-span-2 md:col-span-1">
-      <form method="post" action="{% url 'train' %}">
+      <form method="post" action="{% url 'insert_via_form' %}" >
         {% csrf_token %}
         <div>
           <p class="text-xl md:text-3xl font-medium">Insert New Question and Answer</p>
         </div>
         <div class="mt-5">
           <label class="text-sm font-medium">Question*</label>
-          <textarea type="text" class="mt-1 outline-none rounded ps-3 w-full bg-[#F5F5F5]" placeholder="Type here"
+          <textarea type="text" name="question" class="mt-1 outline-none rounded ps-3 w-full bg-[#F5F5F5]" placeholder="Type here"
             required></textarea>
         </div>
         <div class="mt-5">
           <label class="text-sm font-medium">Answers*</label>
-          <textarea type="text" class="mt-1 outline-none rounded ps-3 w-full bg-[#F5F5F5]" placeholder="Type here"
+          <textarea type="text" name="answer" class="mt-1 outline-none rounded ps-3 w-full bg-[#F5F5F5]" placeholder="Type here"
             required></textarea>
         </div>
         <div>
@@ -83,6 +86,7 @@
               Submit Text Feild
             </button></a>
         </div>
+      </form>
     </div>
     <div class="col-span-2 md:col-span-1">
       <form method="post" action="{% url 'upload_excel' %}" enctype="multipart/form-data">
@@ -92,7 +96,7 @@
           <p class="text-xl md:text-3xl font-medium">Upload Excel File</p>
         </div>
         <div class="border-2 border-dashed mt-5 rounded flex justify-center">
-          <label for="drop-file" class="cursor-pointer p-3 text-center">
+          <label for="id_excel_file" class="cursor-pointer p-3 text-center">
             <img src="{% static 'images/cloud.png' %}" alt="" class="mx-auto" />
             <p class="mt-2 text-base md:text-lg font-medium">
               Choose a file or drag & drop it here
@@ -100,18 +104,15 @@
             <p class="text-sm md:text-md font-medium text-[#555555] text-center mt-1">
               Excel File formats, up to 50MB
             </p>
-            <button class="bg-[#555555] text-white px-5 py-1 mt-1 rounded">
-              <label for="id_excel_file" class="bg-[#555555] text-white px-5 py-1 mt-1 rounded cursor-pointer"> Browse
-                File</label>
-              <input type="file" name="excel_file" id="id_excel_file" class="hidden" />
-            </button>
+            <div class="bg-[#555555] text-white px-5 py-1 mt-1 rounded"><input type="file" name="excel_file" id="id_excel_file" class="hidden" />Browse File</div>
+            
           </label>
         </div>
         <div>
-          <a href="#"><button type="submit"
-              class="w-full mt-6 bg-[#23C69E] text-white text-md font-medium rounded h-10">
-              Upload Excel File
-            </button></a>
+          <button type="submit"
+            class="w-full mt-6 bg-[#23C69E] text-white text-md font-medium rounded h-10">
+            Upload Excel File
+          </button>
         </div>
       </form>
     </div>
@@ -192,6 +193,7 @@
         success: function (data) {
           // Increment the page number for the next request
           nextPageNumber++;
+          // initial_value_js = (nextPageNumber - 2) * 8
           // Append the new content to the container
           $('#question_answers_container').append($(data).find('#question_answers_container').html());
           initShowMoreAndHide()

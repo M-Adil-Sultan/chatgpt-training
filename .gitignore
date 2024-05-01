@@ -21,11 +21,15 @@
 *.rar
 *.tar
 *.zip
+*.env
 
 # Logs and databases #
 ######################
 *.log
 *.sql
+*.sqlite3
+*.db
+
 
 # OS generated files #
 ######################
