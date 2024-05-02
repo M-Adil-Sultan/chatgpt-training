@@ -21,11 +21,15 @@
 *.rar
 *.tar
 *.zip
+*.env
 
 # Logs and databases #
 ######################
 *.log
 *.sql
+*.sqlite3
+*.db
+
 
 # OS generated files #
 ######################
@@ -42,5 +46,6 @@ Thumbs.db
 mydata/SocialLabsTrainingFormat.xlsx
 chatbot/__pycache__/
 django_chatbot/__pycache__/
+django_chatbot/settings/__pycache__/
 train/__pycache__/
 Dockerfile

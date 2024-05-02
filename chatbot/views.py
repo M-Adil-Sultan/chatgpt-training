@@ -83,7 +83,7 @@ def initialize_chain():
     return chain
 
 # Initialize the chain outside the view function
-chain = initialize_chain()
+# chain = initialize_chain()
 
 def chain_initializer(request):
     global chain
@@ -223,7 +223,7 @@ def logout(request):
     return redirect('login')
 
 def chatlog(request):
-    chats = Chat.objects.filter(user=request.user)
+    chats = Chat.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'chatbot_log.html', {'chats': chats})
 
 def insert_to_train(request, chat_id):
