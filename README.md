@@ -27,31 +27,81 @@ Follow these steps to set up the Django ChatGPT Chatbot:
 
 ```
 git clone https://github.com/nativebrains/chatgpt-training
+
 cd chatgpt-training
 ```
-
-2. Install the required Python packages using pip:
+2. Creating virtual environments
+Creation of virtual environments is done by executing the command venv:
+For Windows:
+Open Command Prompt.
+Navigate to the directory where you want to create the virtual environment using cd command.
+Run the following command to create a virtual environment named "env":
 
 ```
-pip install openai, langchain, tiktoken, chromadb untructured, django-bootstrap4
+python -m venv venv
+```
+Run virtual environment:
+
+```
+<source> venv\Scripts\activate
+```
+For Linux and macOS:
+Open Terminal.
+Navigate to the directory where you want to create the virtual environment using cd command.
+Run the following command to create a virtual environment named "env":
+
+```
+python3 -m venv venv
 ```
 
-3. Set up your OpenAI API key:
+(Note: On some systems, python command might be used instead of python3)
 
-   Open `views.py` in [chatbot folder](chatbot/views.py) and add openai_api_key:
+Activate the virtual environment by running:
 
-   ```python
-   openai_api_key = 'YOUR_API_KEY' # Replace YOUR_API_KEY with your openai apikey 
-   ```
+```
+<source> venv/bin/activate
+
+```
+
+3. Install the required Python packages using pip:
+
+```
+pip install -r requirements.txt
+```
+
+4. For PRODUCTION make sure you have:
+.env (file)
+PostgreSQL (configured)  
 
 ## Usage
 
 To run the Django ChatGPT Chatbot, follow these steps:
 
-1. Start the Django development server:
+1. Make sure to run migrations of the Django development server:
+
+For LOCAL DEV environment:
 
 ```
-python manage.py runserver
+python manage.py migrate --settings=django_chatbot.settings.dev
+```
+
+For PRODUCTION environment:
+
+```
+python manage.py migrate --settings=django_chatbot.settings.prod
+```
+2. To run project of the Django development server:
+
+For LOCAL DEV environment:
+
+```
+python manage.py runserver --settings=django_chatbot.settings.dev
+```
+
+For PRODUCTION environment:
+
+```
+python manage.py runserver --settings=django_chatbot.settings.prod
 ```
 
 2. Open your web browser and navigate to `http://localhost:8000/` to create a new user account. 
