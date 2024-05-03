@@ -1,5 +1,4 @@
-{% extends 'base.html' %}{% load count_tag %} {% load static %} {% block title %}Train Dataset{% endblock %} {% block content %}
-{% initialize 0 as initial_value %}
+{% extends 'base.html' %} {% load static %} {% block title %}Train Dataset{% endblock %} {% block content %}
 <div class="my-10 px-4 md:px-0">
   <div class="flex justify-between items-center flex-wrap md:flex-nowrap space-y-4 md:space-y-0">
     <p class="font-poppins font-bold text-2xl text-black">Train Dataset</p>
@@ -34,10 +33,8 @@
       <p class="w-[18%] text-center">Actions</p>
     </div>
     {% for qa in question_answers %}
-    <!-- {% increment 'initial_value' %} -->
-    <div class="flex gap-x-6 bg-color h-18 p-4 w-[100%] px-2">
-      <p class="w-[2%] text-sm text-center">{{ forloop.counter }}</p>
-      <!-- <p class="w-[2%] text-sm text-center">{{ initial_value }}</p> -->
+    <div class="flex gap-x-6 bg-color h-18 p-4 w-[100%] px-2 new-content">
+      <p class="w-[2%] text-sm text-center number">{{ forloop.counter }}</p>
       <div class="w-[40%] text-sm">
         <p class="overflow-hidden more-content">{{ qa.question }}</p>
       </div>
@@ -183,27 +180,37 @@
       });
     });
 
-    let nextPageNumber = "{{ question_answers.next_page_number|default:1 }}"; // Get the initial page number or default to 1
+  let nextPageNumber = "{{ question_answers.next_page_number|default:1 }}"; // Get the initial page number or default to 1
 
-    $('#load_more_button').on('click', function () {
-      let nextPageUrl = "{% url 'train' %}?page=" + nextPageNumber; // Construct the URL for the next page
-      $.ajax({
-        url: nextPageUrl,
-        type: 'GET',
-        success: function (data) {
-          // Increment the page number for the next request
-          nextPageNumber++;
-          // initial_value_js = (nextPageNumber - 2) * 8
-          // Append the new content to the container
-          $('#question_answers_container').append($(data).find('#question_answers_container').html());
-          initShowMoreAndHide()
-
-        },
-        error: function (xhr, status, error) {
-          console.error('Error fetching next page:', error);
-        }
-      });
+    // Click event handler for the load more button
+  $('#load_more_button').on('click', function () {
+    let nextPageUrl = "{% url 'train' %}?page=" + nextPageNumber; // Construct the URL for the next page
+    $.ajax({
+      url: nextPageUrl,
+      type: 'GET',
+      success: function (data) {
+        // Increment the page number for the next request
+        nextPageNumber++;
+        // Calculate the starting number for the next page
+        let startingNumber = 1
+        // Append the new content to the container
+        $('#question_answers_container').append($(data).find('#question_answers_container').html());
+        // Update the numbering for the newly loaded content
+        updateNumbering(startingNumber);
+        initShowMoreAndHide(); // Initialize show more/hide functionality for the newly loaded content
+      },
+      error: function (xhr, status, error) {
+        console.error('Error fetching next page:', error);
+      }
     });
+  });
+
+  // Function to update numbering for the newly loaded content
+  function updateNumbering(startingNumber) {
+    $('.new-content .number').each(function (index) {
+      $(this).text(startingNumber + index);
+    });
+  }
   });
 </script>
 {% endblock %}
