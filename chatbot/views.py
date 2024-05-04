@@ -83,7 +83,7 @@ def initialize_chain():
     return chain
 
 # Initialize the chain outside the view function
-# chain = initialize_chain()
+chain = initialize_chain()
 
 def chain_initializer(request):
     global chain
