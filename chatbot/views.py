@@ -111,6 +111,8 @@ def chatbot(request):
         message = request.POST.get('message')
         db_response = Train_dataset.objects.filter(question__iexact=message).first()
         if db_response is not None and db_response.answers is not None:
+            chat = Chat(user=request.user, message=message, response=db_response.answers, created_at=timezone.now())
+            chat.save()
             return JsonResponse({'message': message, 'response': db_response.answers})
 
         response = ask_openai(message)
@@ -123,7 +125,10 @@ def chatbot(request):
         dict[uuid.uuid4().hex[:6].upper()] = chat
     return render(request, 'chatbot.html', {'chats': dict.items()})
 
+#------------------------------------------------------------------
 # Remaining views (login, register, logout, chatlog) remain unchanged.
+#------------------------------------------------------------------
+
 
 def login(request):
     if request.method == 'POST':
