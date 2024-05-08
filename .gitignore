@@ -45,7 +45,9 @@ Thumbs.db
 *.csv
 mydata/SocialLabsTrainingFormat.xlsx
 chatbot/__pycache__/
+chatbot/migrations/__pycache__/
 django_chatbot/__pycache__/
 django_chatbot/settings/__pycache__/
 train/__pycache__/
+train/migrations/__pycache__/
 Dockerfile
