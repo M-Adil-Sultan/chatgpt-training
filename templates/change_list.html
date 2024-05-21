@@ -1,0 +1,20 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+
+{% block content %}
+  <style>
+    .button {
+      display: inline-block;
+      padding: 5px 10px;
+      margin: 5px;
+      background: #0056b3;
+      color: white;
+      border-radius: 3px;
+      text-decoration: none;
+    }
+    .button:hover {
+      background: #004494;
+    }
+  </style>
+  {{ block.super }}
+{% endblock %}

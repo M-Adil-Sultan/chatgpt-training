@@ -176,14 +176,15 @@ def register(request):
                 html_message = render_to_string('request_approval_email_new.html', {'user_id':user.id,'username': username, 'email': email,'base_url': base_url,})
                 plain_message = strip_tags(html_message)
                 
-                send_mail(
-                    'New User Registration - Approval Required',
-                    plain_message,
-                    email_from,
-                    recipient_list,
-                    html_message=html_message,
-                    fail_silently=False,
-                )
+                # To enable sending email uncomment
+                # send_mail(
+                #     'New User Registration - Approval Required',
+                #     plain_message,
+                #     email_from,
+                #     recipient_list,
+                #     html_message=html_message,
+                #     fail_silently=False,
+                # )
                 
                 # Redirect user to the "Wait for Approval" page
                 return render(request, 'wait_for_approval.html')
@@ -212,14 +213,14 @@ def approve_user(request, user_id):
         html_message = render_to_string('approval_email.html', {'username': user.username, 'email': user.email,'base_url': base_url,})
         plain_message = strip_tags(html_message)
         
-        send_mail(
-            'THE SOCIAL SALES LAB - Registeration Approved',
-            plain_message,
-            email_from,
-            recipient_list,
-            html_message=html_message,
-            fail_silently=False,
-        )
+        # send_mail(
+        #     'THE SOCIAL SALES LAB - Registeration Approved',
+        #     plain_message,
+        #     email_from,
+        #     recipient_list,
+        #     html_message=html_message,
+        #     fail_silently=False,
+        # )
         # Redirect to a success page or any other appropriate page
         return render(request, 'success.html', {'user_approved': "True"}) 
     except User.DoesNotExist:
