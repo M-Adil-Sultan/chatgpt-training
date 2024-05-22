@@ -80,7 +80,7 @@
         <div>
           <a href="#"><button type="submit"
               class="w-full mt-8 bg-[#E5FE0C] text-black text-md font-medium rounded h-10">
-              Submit Text Feild
+              Submit
             </button></a>
         </div>
       </form>
@@ -92,6 +92,11 @@
           <img src="{% static 'images/cloud.png' %}" alt="" class="border rounded-full p-3" />
           <p class="text-xl md:text-3xl font-medium">Upload Excel File</p>
         </div>
+        <div class="mt-4 text-center">
+          <a href="{% url 'download_sample_excel' %}" class="bg-[#23C69E] text-white text-md font-medium rounded h-10 px-4 inline-flex items-center">
+              Download Sample Excel File
+          </a>
+      </div>
         <div class="border-2 border-dashed mt-5 rounded flex justify-center">
           <label for="id_excel_file" class="cursor-pointer p-3 text-center">
             <img src="{% static 'images/cloud.png' %}" alt="" class="mx-auto" />
@@ -181,6 +186,7 @@
     });
 
   let nextPageNumber = "{{ question_answers.next_page_number|default:1 }}"; // Get the initial page number or default to 1
+  let lastnum
 
     // Click event handler for the load more button
   $('#load_more_button').on('click', function () {
@@ -196,7 +202,7 @@
         // Append the new content to the container
         $('#question_answers_container').append($(data).find('#question_answers_container').html());
         // Update the numbering for the newly loaded content
-        updateNumbering(startingNumber);
+        lastnum = updateNumbering(startingNumber, lastnum);
         initShowMoreAndHide(); // Initialize show more/hide functionality for the newly loaded content
       },
       error: function (xhr, status, error) {
@@ -206,10 +212,15 @@
   });
 
   // Function to update numbering for the newly loaded content
-  function updateNumbering(startingNumber) {
+  function updateNumbering(startingNumber, lastnum) {
     $('.new-content .number').each(function (index) {
-      $(this).text(startingNumber + index);
+      currentnum = startingNumber + index
+      $(this).text(currentnum);
     });
+    if (lastnum == currentnum){
+      $('#load_more_button').hide();
+    }
+    return currentnum
   }
   });
 </script>

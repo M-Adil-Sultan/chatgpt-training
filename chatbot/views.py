@@ -187,8 +187,7 @@ def register(request):
                 # )
                 
                 # Redirect user to the "Wait for Approval" page
-                # return render(request, 'wait_for_approval.html')
-                return render(request, 'register.html')
+                return render(request, 'wait_for_approval.html')
                 
 
             except Exception as e:
