@@ -1,13 +1,16 @@
 from django.contrib import admin
-from .models import Chat
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.urls import path
 from django.http import HttpResponseRedirect
 from django.utils.html import format_html
+from .models import Chat
 
 class UserAdmin(BaseUserAdmin):
     change_list_template = 'admin/change_list.html'
+
+    def get_ordering(self, request):
+        return ['-date_joined']
 
     def get_urls(self):
         urls = super().get_urls()
@@ -49,7 +52,5 @@ class UserAdmin(BaseUserAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
-
-
 
 admin.site.register(Chat)

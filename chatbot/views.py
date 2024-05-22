@@ -187,7 +187,9 @@ def register(request):
                 # )
                 
                 # Redirect user to the "Wait for Approval" page
-                return render(request, 'wait_for_approval.html')
+                # return render(request, 'wait_for_approval.html')
+                return render(request, 'register.html')
+                
 
             except Exception as e:
                 print(f"Error Creating account: {e}")
