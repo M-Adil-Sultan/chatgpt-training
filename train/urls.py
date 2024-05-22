@@ -7,4 +7,5 @@ urlpatterns = [
     path('delete/<int:id>/', views.delete, name='delete'),
     path('search/', views.search_train_dataset, name='search_train_dataset'),
     path('insert_via_form/', views.insert_via_form, name='insert_via_form'),
+    path('download-sample-excel/', views.download_sample_excel, name='download_sample_excel'),
 ]

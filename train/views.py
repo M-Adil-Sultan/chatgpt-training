@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect
 from django.core.files.storage import FileSystemStorage
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
+from django.http import FileResponse
 
 
 def train(request):
@@ -26,7 +27,8 @@ def train(request):
     except EmptyPage:
         # If page is out of range (e.g., 9999), deliver last page of results.
         question_answers = paginator.page(paginator.num_pages)
-
+              
+    has_next = question_answers.has_next()
     # Handle form submission
     if request.method == 'POST':
         form = TrainForm(request.POST, request.FILES)
@@ -46,9 +48,17 @@ def train(request):
                 print("Excel File is not valid")  # Print for debugging
             request.session['success'] = 2
             return redirect('train')  # Redirect to the same page after submission
+    elif has_next == True:
+        form = TrainForm()
+        return render(request, 'train.html',
+                      {'question_answers': question_answers,
+                       'form': form,
+                       'has_next': has_next})
     else:
         form = TrainForm()
-    return render(request, 'train.html', {'question_answers': question_answers, 'form': form})
+        return render(request, 'train.html',
+                      {'form': form,'has_next': has_next})
+        
     
 def search_train_dataset(request):
     query = request.GET.get('q')
@@ -93,6 +103,11 @@ def handle_uploaded_excel(excel_file):
         fs.delete(filename)
     else:
         print("File does not exist:", file_path)
+        
+def download_sample_excel(request):
+    file_path = os.path.join('static/files', 'sample.xlsx')
+    response = FileResponse(open(file_path, 'rb'), as_attachment=True, filename='sample.xlsx')
+    return response
         
 def insert_via_form(request):
     if request.method == 'POST':
