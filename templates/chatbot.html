@@ -251,14 +251,9 @@
         <img src="{% static 'images/ai.png' %}" alt="AI" class="" />
         <div class="relative bg-[#23C69E0F] w-full h-full px-4 py-3">
           <label for="npm-install-copy-button" class="sr-only">Label</label>
-          <input
-            id="npm-install-copy-button"
-            type="text"
-            class="w-full"
-            value="${response}"
-            disabled
-            readonly
-          />
+          <p id="npm-install-copy-button">
+            ${response}
+          </p>
           <div class="class_${id}" style="display: none">
             ${response}
           </div>
