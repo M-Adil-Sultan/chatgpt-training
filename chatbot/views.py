@@ -8,37 +8,71 @@ from django.utils import timezone
 from .models import Chat
 from train.models import Train_dataset
 from langchain.llms import OpenAI
-from langchain.chains import ConversationalRetrievalChain, RetrievalQA
+from langchain.chains import ConversationalRetrievalChain, RetrievalQA, StuffDocumentsChain, LLMChain
+from langchain.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate, PromptTemplate
+from langchain_core.vectorstores import VectorStoreRetriever
 from langchain.chat_models import ChatOpenAI
 from langchain.document_loaders import DirectoryLoader
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import Chroma
-# from langchain.document_loaders import PandasDataFrameLoader
-from langchain_community.document_loaders import DataFrameLoader
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
-import time
 import uuid
-from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.conf import settings
-from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
-
 # Set the OpenAI API key as an environment variable
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = "sk-sBlTgTX3mOMp0ycR5m15T3BlbkFJ4hlErtP5VWu"
+
+# Define a new prompt template for combining documents
+new_combining_prompt = ChatPromptTemplate(
+    input_variables=['context', 'question'],
+    messages=[
+        SystemMessagePromptTemplate(
+            prompt=PromptTemplate(
+                input_variables=['context'],
+                template="Based on the following context, provide a friendly and helpful response to the question. If you’re unsure, it’s okay to say that you don’t know. Here’s the context:\n{context}"
+            )
+        ),
+        HumanMessagePromptTemplate(
+            prompt=PromptTemplate(
+                input_variables=['question'],
+                template="What do you need help with?\n{question}"
+            )
+        )
+    ]
+)
+
+# Update the StuffDocumentsChain with the new prompt
+combining_chain = StuffDocumentsChain(
+    llm_chain=LLMChain(
+        prompt=new_combining_prompt,
+        llm=ChatOpenAI(model="gpt-4")
+    ),
+    document_variable_name='context'
+)
+
+# Define a new prompt template for the question generator
+new_question_generator_prompt = PromptTemplate(
+    input_variables=['chat_history', 'question'],
+    template="Based on this conversation and the follow-up question, rephrase the question in a way that sounds natural and friendly:\n\nChat History:\n{chat_history}\nFollow-Up Input: {question}\nRephrased Question:"
+)
+
+# Update the QuestionGenerator chain with the new prompt
+question_generator_chain = LLMChain(
+    prompt=new_question_generator_prompt,
+    llm=ChatOpenAI(model="gpt-4")
+)
 
 def initialize_chain():
     # Get the data from the database
     queryset = Train_dataset.objects.all()
     qa_data = queryset.values('question', 'answers')
-    # print(f"--------qa_data: {qa_data} ---------")
     
     # Convert the data into a DataFrame
     df = pd.DataFrame.from_records(qa_data)
-    # print("df:", df)
 
     if os.path.exists("mydata/SocialLabsTrainingFormat.xlsx"):
         os.remove("mydata/SocialLabsTrainingFormat.xlsx")
@@ -54,32 +88,28 @@ def initialize_chain():
     df.to_excel(excel_file_path, index=False)
 
     # Load documents from the Pandas DataFrame using PandasDataFrameLoader
-    # loader = DataFrameLoader(df, page_content_column="answers")
     loader = DirectoryLoader(directory_path)
     documents = loader.load()
-
-    # Access the content and metadata of each document
-    # for document in documents:
-    #     content = document.page_content
-    #     metadata = document.metadata
 
     # Initialize the text splitter and embeddings
     text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     texts = text_splitter.split_documents(documents)
     embeddings = OpenAIEmbeddings()
 
-    # # Create the Chroma vector store
+    # Create the Chroma vector store
     docsearch = Chroma.from_documents(texts, embeddings)
 
-    # Create the RetrievalQA object
-    qa = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=docsearch.as_retriever())
-
-    # Create the ConversationalRetrievalChain
-    chain = ConversationalRetrievalChain.from_llm(
-        llm=ChatOpenAI(model="gpt-4"),
-        retriever=docsearch.as_retriever(search_kwargs={"k": 1}),
+    # Create the ConversationalRetrievalChain with updated components
+    retriever = VectorStoreRetriever(
+        vectorstore=docsearch,
+        search_kwargs={"k": 1}
     )
-    
+
+    chain = ConversationalRetrievalChain(
+        combine_docs_chain=combining_chain,
+        question_generator=question_generator_chain,
+        retriever=retriever
+    )
 
     return chain
 
@@ -92,7 +122,6 @@ def chain_initializer(request):
     return redirect('chatbot')
 
 def chat_with_langchain(query, chat_history):
-    chain({"question": query, "chat_history": chat_history})
     result = chain({"question": query, "chat_history": chat_history})
     answer = result['answer']
     chat_history.append((query, answer))
